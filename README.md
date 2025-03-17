@@ -10,7 +10,7 @@ Before [getting started](#getting-started), a user needs:
   * A valid MathWorks license for product version **R2020a or later**.
   * To be an administrator of the network license that will be used. This might be necessary to activate the license with the `hostid` or `ip` of the VM which will be eventually hosting the License Manager.
   
-For more information on how to configure your license for cloud use, see [MATLAB Licensing in the Cloud](https://www.mathworks.com/help/licensingoncloud/matlab-on-the-cloud.html).
+For more information on how to configure your license for cloud use, see [MATLAB Licensing in the Cloud](https://www.mathworks.com/help//releases/R2021a/licensingoncloud/matlab-on-the-cloud.html).
 
 * Google Cloud Platform:
   * Access to Google Cloud [service account](https://cloud.google.com/iam/docs/service-accounts) credentials
