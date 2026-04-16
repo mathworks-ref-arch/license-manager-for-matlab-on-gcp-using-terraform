@@ -6,6 +6,7 @@
 VERSION=$1
 MLM_HOST=$2
 ZONE=$3
+APP_PROJECT=$4
 MATLAB_ROOT="/usr/local/MATLAB/${VERSION}"
 printf "\n\n\n"
 echo -e "\e[1mChecking if License Manager is up and running.\e[0m"
@@ -20,7 +21,7 @@ while [ $flag -ne 1 ] && [ $timeout_counter -le $timeout_limit ]
 do
     
     # Test mlm instance health
-    status=$(gcloud compute ssh ${MLM_HOST} --zone ${ZONE} --command "${MATLAB_ROOT}/etc/glnxa64/lmutil lmstat -a -c ${MATLAB_ROOT}/etc/license.dat" 2>/dev/null)
+    status=$(gcloud compute ssh ${MLM_HOST} --zone ${ZONE} --project ${APP_PROJECT} --command "${MATLAB_ROOT}/etc/glnxa64/lmutil lmstat -a -c ${MATLAB_ROOT}/etc/license.dat" 2>/dev/null)
     success_sub_str='license server UP (MASTER)'
 
     if [[ $status = "" ]]; then

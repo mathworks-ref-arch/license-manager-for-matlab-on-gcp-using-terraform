@@ -9,26 +9,38 @@ provider "google" {
 # Create a GCS bucket for uploading license file post license manager installation
 resource "google_storage_bucket" "license" {
   name = "${var.tag}-license-bucket"
+  location = var.region
   force_destroy = true
-  provisioner "local-exec" {
-   command = "./local_scripts/check_for_licensefile.sh license.lic && gsutil -m cp ./license/license.lic gs://${google_storage_bucket.license.name}"
- }
+}
+
+# Upload license file to the license bucket using Terraform-native resource
+resource "google_storage_bucket_object" "license_file" {
+  depends_on = [google_storage_bucket.license]
+  name   = "license.lic"
+  source = "${path.module}/license/license.lic"
+  bucket = google_storage_bucket.license.name
 }
 
 # Create a GCS bucket to host installation scripts for the duration of deployment only
 resource "google_storage_bucket" "script" {
-  depends_on = [ google_storage_bucket.license ]   
+  depends_on = [google_storage_bucket_object.license_file]
   name = "${var.tag}-build-tempscript-bucket"
+  location = var.region
   force_destroy = true
-  provisioner "local-exec" {
-   command = "gsutil -m cp -r ./placefilesinbucket/* gs://${google_storage_bucket.script.name}/"
- }
+}
+
+# Upload all script files to the script bucket using Terraform-native resource
+resource "google_storage_bucket_object" "script_files" {
+  for_each = fileset("${path.module}/placefilesinbucket", "**")
+  name     = each.value
+  source   = "${path.module}/placefilesinbucket/${each.value}"
+  bucket   = google_storage_bucket.script.name
 }
 
 # Create vpc
 module "mlm_vpc_network" {
-  depends_on = [ google_storage_bucket.license ]   
-  count = var.create_new_vpc ? 1:0
+  depends_on = [google_storage_bucket_object.license_file]
+  count = var.create_new_vpc ? 1 : 0
   source  = "./modules/vpc_network"
   tag     = var.tag
   project = var.app_project
@@ -46,22 +58,22 @@ data "google_compute_network" "input_vpc_network" {
 
 # Add firewall rules to allow mlm connections for existing network
 resource "google_compute_firewall" "allow-mlm" {
-  depends_on = [ google_storage_bucket.license ]
+  depends_on = [google_storage_bucket_object.license_file]
   count = var.create_new_vpc ? 0 : 1
   name = "${var.tag}-fw-allow-http"
   network = var.existing_vpc_network
   allow {
     protocol = "tcp"
-    ports    = [var.LicenseManagerPort,var.VendorDaemonPort,"22"]
+    ports    = [var.LicenseManagerPort, var.VendorDaemonPort, "22"]
   }
   target_tags = var.network_tags
-  source_ranges = [var.allowclientip]
+  source_ranges = toset(var.allowclientip)
 }
 
 # Create subnet
 module "mlm_subnet" {
-  depends_on = [ google_storage_bucket.license ]
-  count = var.subnet_create ? 1:0
+  depends_on = [google_storage_bucket_object.license_file]
+  count = var.subnet_create ? 1 : 0
   source  = "./modules/subnet"
   tag          = var.tag
   ip_cidr_range = "10.128.0.0/20"
@@ -79,7 +91,7 @@ data "google_compute_subnetwork" "input-subnetwork" {
 # Creating VM for MATLAB Network License Manager
 module "mlm_node" {
 
-  depends_on = [ google_storage_bucket.script, module.mlm_vpc_network, module.mlm_subnet , google_storage_bucket.license ]
+  depends_on = [google_storage_bucket_object.script_files, module.mlm_vpc_network, module.mlm_subnet, google_storage_bucket_object.license_file]
 
   source  = "./modules/mlm"
   # access
@@ -116,19 +128,19 @@ module "mlm_node" {
 }
 
 # GetFlexLMhostid
-resource "null_resource" "getflexlmhostid"{
-  depends_on = [ module.mlm_node ]
+resource "null_resource" "getflexlmhostid" {
+  depends_on = [module.mlm_node]
   provisioner "local-exec" {
-    command = "./local_scripts/checkinstall.sh ${var.Version} ${module.mlm_node.name} ${var.zone}"
+    command = "./local_scripts/checkinstall.sh ${var.Version} ${module.mlm_node.name} ${var.zone} ${var.app_project}"
   }
 }
 
 # Delete Storage bucket to avoid costs
-resource "null_resource" "removescriptbucket"{
-  depends_on = [ module.mlm_node , null_resource.getflexlmhostid ]
+resource "null_resource" "removescriptbucket" {
+  depends_on = [module.mlm_node, null_resource.getflexlmhostid]
   provisioner "local-exec" {
-    command = "gsutil rm -r gs://${google_storage_bucket.script.name}"
+    command = "gsutil -o 'Credentials:gs_service_key_file=${abspath("credentials.json")}' rm -r gs://${google_storage_bucket.script.name}"
   }
 }
 
-#(c) 2021 MathWorks, Inc.
+# Copyright 2021-2026 The MathWorks, Inc.

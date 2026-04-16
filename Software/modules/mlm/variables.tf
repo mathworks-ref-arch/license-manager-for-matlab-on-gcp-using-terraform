@@ -88,7 +88,7 @@ variable "licenseBucketName" {
 # MATLAB LICENSE Version
 variable "Version" {
   type = string
-  default = "R2021a"
+  default = "R2024b"
   description = "Example 'R2021a' , 'R2020b', 'R2020a' , 'R2019b' etc"
 }
 
@@ -111,7 +111,7 @@ variable "licenseManagerPort"{
 variable "vendorDaemonPort"{
   type = number
   description = "VendorDaemonPort"
-  default = 1049
+  default = 27010
 }
 
-# (c) 2021 MathWorks, Inc.
+# Copyright 2021-2026 The MathWorks, Inc.

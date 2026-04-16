@@ -65,16 +65,17 @@ To get access to valid Google Cloud Service Account credentials, see detailed st
 |network_tags|["mlm","ssh"]|`list`|Provide network firewall tags for applying the rules on target License Manager VM created by the scripts. These network_tags are passed as an input to the module `mlm`|`yes`|
 |subnet_create|`false`|`bool`|"User Input stating whether a new subnet needs to be created or an existing subnet needs to be used"|`yes`|
 |existing_subnet|"test-tf-subnet"|`string`|Set to existing subnet name if subnet_create set to `false`. Make sure the existing subnet exists within the existing VPC network stated in `existing_vpc_network`|`yes`|
-|allowclientip|"172.24.0.0/16"|`string`|Add comma seperated IP Ranges that should be allowed through the firewall|`yes`|
+|allowclientip|`["11.22.33.44/32","44.55.66.77/32"]`|`set(string)`|Set of IP/CIDR ranges to allow through the firewall (e.g. deployer IP + MATLAB client IP). No default -- must be provided.|`yes`|
 |Version|"R2021a"|`string`|Version of MathWorks product license.|`yes`|
 |LicenseHostActivation|"HOSTID"|`string`|Is the license activated with VOL Serial (MAC) or with INTERNET (IP).This variable can take values either `HOSTID` or `INTERNET` only.|`yes`|
 |LicenseManagerPort|27000|`number`|Default port for FlexLM service. This port will be open on the firewall to allow traffic requesting for license checkout.|`yes`|
-|VendorDaemonPort|1049|`number`|Vendor daemon port is used for communication between the client application and MLM. The port used by MLM is not set by default. When it is not set, the port is chosen randomly.|`yes`|
+|VendorDaemonPort|27010|`number`|Vendor daemon port is used for communication between the client application and MLM. The port used by MLM is not set by default. When it is not set, the port is chosen randomly.|`yes`|
 |tag|"`[username]-mlm-[version]-[date]`"|`string`|A prefix to create cloud resources with unique names|`yes`|
 
 * To get started use the [example script provided](Software/exampleSetUpNetworkLicenseManager.sh) to and test a deployment scenario.
   ```
-     >>./Software/exampleSetUpNetworkLicenseManager.sh 
+     >>cd ./Software
+     >>sudo ./exampleSetUpNetworkLicenseManager.sh 
   ```
 
 * Monitor output for the deployment:

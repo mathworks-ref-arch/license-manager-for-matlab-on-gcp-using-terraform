@@ -20,7 +20,7 @@ The VPC network can be configured by the user through the module [`vpc_network`]
 
 The VPC network inherits the zone and region of the Google Cloud project selected by the user.
 
-The TCP ports for ingress is labelled as `mlm` and the default value used for MATLAB Network License Manager is `27000` and for Vendor daemon port is `1049`. The user has the flexibility to provide a different port values through `variables.tf`.
+The TCP ports for ingress is labelled as `mlm` and the default value used for MATLAB Network License Manager is `27000` and for Vendor daemon port is `27010`. The user has the flexibility to provide a different port values through `variables.tf`.
 
 ### Network and Subnet
 
@@ -99,8 +99,8 @@ resource "google_compute_firewall" "allow-http-ssh" {
     ports    = ["22",var.licenseManagerPort, var.vendorDaemonPort]
   }
   target_tags = var.network_tags
-  source_ranges = [var.allowclientip]
+  source_ranges = toset(var.allowclientip)
 }
 ```
 
-[//]: #  (Copyright 2021 The MathWorks, Inc.)
+[//]: # Copyright 2021-2026 The MathWorks, Inc.

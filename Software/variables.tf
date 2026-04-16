@@ -17,13 +17,13 @@ variable "gce_ssh_key_file_path" {
 
 variable "region" {
   type = string
-  default = "us-central1"
+  default = "us-west1"
   description = "Enter cloud regions"
 }
 
 variable "zone" {
   type = string
-  default = "us-central1-c"
+  default = "us-west1-c"
   description = "Add zone for cluster vms"
 }
 
@@ -38,8 +38,8 @@ variable "machine_types" {
 # Boot Disk OS details
 variable "bootDiskOS" {
   type = string
-  default = "ubuntu20"
-  description = "Supported OS include: rhel7, rhel8, ubuntu16, ubuntu18, ubuntu20"
+  default = "ubuntu22"
+  description = "Supported OS include: rhel7, rhel8, ubuntu16, ubuntu18, ubuntu20, ubuntu22"
 }
 
 variable "imageProject" {
@@ -50,6 +50,7 @@ variable "imageProject" {
     ubuntu16 = "ubuntu-os-cloud"
     ubuntu18 = "ubuntu-os-cloud"
     ubuntu20 = "ubuntu-os-cloud"
+    ubuntu22 = "ubuntu-os-cloud"
   }
   description = "Global image project"
 }
@@ -62,6 +63,7 @@ variable "imageFamily" {
     ubuntu16 = "ubuntu-1604-lts"
     ubuntu18 = "ubuntu-1804-lts"
     ubuntu20 = "ubuntu-2004-lts"
+    ubuntu22 = "ubuntu-2204-lts"
   }
   description = "Global image family"
 }
@@ -75,7 +77,7 @@ variable "create_new_vpc" {
 # Set this to existing network name if `create_new_vpc` is set to `false`
 variable "existing_vpc_network" {
  type = string
- default = "tf-test-network"
+ default = ""
 }
 
 # Provide Network tags for existing network
@@ -95,15 +97,20 @@ variable "subnet_create" {
 variable "existing_subnet" {
   type = string
   description = "Existing Subnet name within above selected existing VPC"
-  default = "test-tf-subnet"
+  default = ""
 }
 
 # Client IPs
 # change this to the range specific to your organization
 variable "allowclientip" {
-  default = "0.0.0.0/0"
-  type = string
-  description = "Add IP Ranges that would connect/submit job e.g. 0.0.0.0/0"
+  type        = set(string)
+  default     = ["0.0.0.0/0"]
+  description = "Add IP Ranges that would connect/submit job. E.g. [\"11.22.33.44/32\",\"55.66.77.88/32\"]"
+
+  validation {
+    condition     = length(var.allowclientip) > 0
+    error_message = "The allowclientip variable must not be empty. This field should be formatted as <ip_address>/<mask>. E.g. [\"11.22.33.44/32\",\"44.55.66.77/32\"]"
+  }
 }
 
 ## Product specific variables
@@ -111,7 +118,7 @@ variable "allowclientip" {
 # MATLAB and Toolbox Version support
 variable "Version" {
   type = string
-  default = "R2021a"
+  default = "R2024b"
   description = "Example: 'R2020a' , 'R2020b', 'R2021a'"
 }
 
@@ -132,12 +139,12 @@ variable "LicenseManagerPort"{
 variable "VendorDaemonPort"{
   type = number
   description = "VendorDaemonPort"
-  default = 1049
+  default = 27010
 }
 
 variable "tag" {
-  default="username-mlm-21a"
+  default="user-nlm-26a"
   description = "A prefix to make resource names unique"
 }
 
-# (c) 2021 MathWorks, Inc.
+# (c) 2021-2026 MathWorks, Inc.

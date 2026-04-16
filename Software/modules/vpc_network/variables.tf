@@ -19,7 +19,7 @@ variable "licenseManagerPort" {
 # FLEX LM Daemon port
 variable "vendorDaemonPort" {
   description = "FLEXLM Vendor daemon at this port"
-  default=1049
+  default=27010
 }
 
 # Provide target tags for instances to apply firewall rules
@@ -31,8 +31,8 @@ variable "network_tags" {
 # Client IPs
 # change this to the range specific to your organization
 variable "allowclientip" {
-  default = "0.0.0.0/0"
-  type = string
-  description = "Add IP Ranges that would connect/submit job e.g. 0.0.0.0/0"
+  type        = set(string)
+  default     = []
+  description = "Add IP Ranges that would connect/submit job"
 }
-# (c) 2021 MathWorks, Inc.
+# Copyright 2021-2026 The MathWorks, Inc.

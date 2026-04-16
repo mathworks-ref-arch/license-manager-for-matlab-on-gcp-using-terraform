@@ -15,12 +15,12 @@ DAEMON_PORT=$5
 # Name of the license file for server to read from
 LICENSE_DAT_FILE="license.dat"
 
-# Get Flexlm HostID for configuring license file
+# Get machine HostID via lmutil as fallback
 echo $(${MATLAB_ROOT}/${VERSION}/etc/glnxa64/lmutil lmhostid) > lmhost.txt && \
 awk 'BEGIN {FS="\""}{echo $2}' lmhost.txt && \
 
-HostID=$(awk 'BEGIN {FS="\""};{print $2}' lmhost.txt) && \
-echo ${HostID} && \
+MachineHostID=$(awk 'BEGIN {FS="\""};{print $2}' lmhost.txt) && \
+echo "Machine HostID: ${MachineHostID}" && \
 
 ## Support for IP based Flex LM (Optional)
 #  ---------------------------------------
@@ -45,9 +45,20 @@ while true; do
                 fi
 
                 # Create license.dat file using license.lic and lmhostid details
+                # First attempt: extract HostID from the license file itself (e.g. "HostID: ID=0" or "HostID: ABCDEF012345")
+                # Fallback: use machine's HostID from lmutil lmhostid
+                LicenseHostID=$(grep -oP 'HostID:\s*\K\S+' ${LICENSE_FILE} | head -1)
+                if [[ -n "${LicenseHostID}" ]]; then
+                    echo "Using HostID from license file: ${LicenseHostID}"
+                    HostID="${LicenseHostID}"
+                else
+                    echo "HostID not found in license file, using machine HostID: ${MachineHostID}"
+                    HostID="${MachineHostID}"
+                fi
+
                 # ADD SERVER and DAEMON lines to configure the license file
                 echo "SERVER $(hostname) ${HostID}  ${LM_PORT}" >> $LICENSE_DAT_FILE && \
-                echo "DAEMON MLM " "/usr/local/MATLAB/${VERSION}/etc/MLM" " port=${DAEMON_PORT}" >> $LICENSE_DAT_FILE && \
+                echo "DAEMON MLM  \"${MATLAB_ROOT}/${VERSION}/etc/MLM\"  port=${DAEMON_PORT}" >> $LICENSE_DAT_FILE && \
                 cat ${LICENSE_FILE} >> ${LICENSE_DAT_FILE} && \
                 
                 # Make a copy of license.dat at matlabroot/version/etc

@@ -3,29 +3,36 @@
 # This is an example script for setting up MATLAB Network License Manager on Google cloud platform.
 
     # Sample Requirements:
-        # OS: Ubuntu20
+        # OS: Ubuntu22
         # Compute: n2-standard-4 machine
         # Number of nodes : 1
         # Existing GCP VPC & Subnet : True/False
         # Version : R2021a
+        # App_Project : XYZ
+
+# App_Project is the name of the Google Cloud project where the resources will be created.
+App_Project="projectid"
 
 ## Recommended practice is to use the latest version of License manager.
 # This supports previous version license checkout as well.
-Version="R2021a"
+Version="R2026a"
 
 # VM Operating system
-BootDiskOS="ubuntu20"
+BootDiskOS="ubuntu22"
 
 ## Set up a MATLAB Network License Manager on Google Cloud
-Create_VPC=true
-Create_Subnet=true
+Create_VPC=false
+Create_Subnet=false
 
 ## The existing networks will be used only if above 2 inputs are set to false
-Existing_VPC_network="tf-test-network"
-Existing_Subnet="test-tf-subnet"
+Existing_VPC_network=""
+Existing_Subnet=""
 
 # Configure variable `machine_types` with instance type
 Instance="n2-standard-4"
+
+# IP addresses to whitelist in firewall (deployer machine + MATLAB client machine)
+AllowClientIP='["<deployer-ip>/32","<matlab-client-ip>/32"]'
 
 # Unique tag for naming resources
 TS=$(date +%s) && \
@@ -46,7 +53,8 @@ terraform apply -auto-approve -var "create_new_vpc=${Create_VPC}" \
 -var "bootDiskOS=${BootDiskOS}" \
 -var "Version=${Version}" \
 -var "machine_types"=${Instance} \
--var "tag=${BUILD_TAG}"
+-var "tag=${BUILD_TAG}" \
+-var "allowclientip=${AllowClientIP}"
 
 exit_status=$?
 
@@ -70,7 +78,7 @@ echo -e "Network Details include network_name = \e[1m${vpc_network}\e[0m subnet 
 printf "\n\n\n" &&\
 echo -e "\e[1mQuerying FlexLM HostID for License Manager host.\e[0m" && \
 
-resultstr=$(./local_scripts/get_flexlm_hostid.sh ${Version} ${mlmHostName} ${zone} 2>/dev/null)
+resultstr=$(./local_scripts/get_flexlm_hostid.sh ${Version} ${mlmHostName} ${zone} ${App_Project} 2>/dev/null)
 flex=$? && \
 if [[ $flex -eq 0 ]]; then
     echo $resultstr > lmhost.txt && \
@@ -86,8 +94,8 @@ echo -e "Rename the MATLAB license file to be hosted as \e[1mlicense.lic\e[0m. T
 
 printf "\n\n"
 echo -e "You can remotely check server status using the following command."
-echo -e "./local_scripts/test_mlm_status.sh ${Version} ${mlmHostName} ${zone}"
+echo -e "./local_scripts/test_mlm_status.sh ${Version} ${mlmHostName} ${zone} ${App_Project}"
 echo -e "Deployment complete."
 fi
 
-# (c) 2021 MathWorks, Inc.
+# Copyright 2021-2026 The MathWorks, Inc.

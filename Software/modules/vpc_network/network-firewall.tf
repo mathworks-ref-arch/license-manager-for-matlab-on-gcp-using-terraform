@@ -7,7 +7,7 @@ resource "google_compute_firewall" "allow-license-checkout" {
     ports    = ["22",var.licenseManagerPort, var.vendorDaemonPort]
   }
   target_tags = var.network_tags
-  source_ranges = [var.allowclientip]
+  source_ranges = toset(var.allowclientip)
 }
 
-# (c) 2021 MathWorks, Inc.
+# Copyright 2021-2026 The MathWorks, Inc.

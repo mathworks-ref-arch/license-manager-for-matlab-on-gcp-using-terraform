@@ -7,6 +7,7 @@
 Version=$1
 zone=$3
 host=$2
+App_Project=$4
 timeout_flag=0
 inc=30
 
@@ -15,34 +16,34 @@ echo hostname: $host
 echo zone: $zone
 
 # Call helper function get_flexlm_hostid to query flexlm hostid for license activation
-resultstr=$(./local_scripts/get_flexlm_hostid.sh ${Version} ${host} ${zone} 2>/dev/null)
+resultstr=$(./local_scripts/get_flexlm_hostid.sh ${Version} ${host} ${zone} ${App_Project} 2>/dev/null)
 flex=$? && \
 if [[ $flex -eq 0 ]]; then
-	echo $resultstr > lmhost.txt && \
-	awk 'BEGIN {FS="\""}{echo $2}' lmhost.txt && \
-	HostID=$(awk 'BEGIN {FS="\""};{print $2}' lmhost.txt) && \
-	echo ${HostID} && \
-	rm -rf lmhost.txt
+    echo $resultstr > lmhost.txt && \
+    awk 'BEGIN {FS="\""}{echo $2}' lmhost.txt && \
+    HostID=$(awk 'BEGIN {FS="\""};{print $2}' lmhost.txt) && \
+    echo ${HostID} && \
+    rm -rf lmhost.txt
 else
-	while [ $flex -ne 0 ] 
-	do
-		sleep 10 && \
-		echo "Installation of License Manager version ${Version} is in progress." && \
-		printf "\n" && \
-		timeout_flag=$[timeout_flag+10] && \
-		if [ $timeout_flag -gt 1000 ]; then
-			echo "Installation check has timed out. Please check logs" && \
-			break
-		else
-			resultstr=$(./local_scripts/get_flexlm_hostid.sh ${Version} ${host} ${zone} 2>/dev/null)
-			flex=$? && \
-			if [[ $flex -eq 0 ]]; then
-				echo $resultstr > lmhost.txt && \
-				awk 'BEGIN {FS="\""}{echo $2}' lmhost.txt && \
-				HostID=$(awk 'BEGIN {FS="\""};{print $2}' lmhost.txt) && \
-				echo ${HostID} && \
-				rm -rf lmhost.txt
-			fi
-		fi
-	done
+    while [ $flex -ne 0 ] 
+    do
+        sleep 10 && \
+        echo "Installation of License Manager version ${Version} is in progress." && \
+        printf "\n" && \
+        timeout_flag=$[timeout_flag+10] && \
+        if [ $timeout_flag -gt 1000 ]; then
+            echo "Installation check has timed out. Please check logs" && \
+            break
+        else
+            resultstr=$(./local_scripts/get_flexlm_hostid.sh ${Version} ${host} ${zone} ${App_Project} 2>/dev/null)
+            flex=$? && \
+            if [[ $flex -eq 0 ]]; then
+                echo $resultstr > lmhost.txt && \
+                awk 'BEGIN {FS="\""}{echo $2}' lmhost.txt && \
+                HostID=$(awk 'BEGIN {FS="\""};{print $2}' lmhost.txt) && \
+                echo ${HostID} && \
+                rm -rf lmhost.txt
+            fi
+        fi
+    done
 fi

@@ -25,7 +25,7 @@ VENDOR_DAEMON_PORT=$5
 
 # Configure path for MATLAB Root and License Manager Log File
 MATLAB_ROOT="/usr/local/MATLAB"
-MLM_LOG_FILE="\/var\/tmp\/LM_TMW.log"
+MLM_LOG_FILE="\/var\/log\/LM_TMW.log"
 
 ## Install dependencies based on Linux distro using the script `getLinuxDistro.sh`
 
@@ -59,7 +59,7 @@ sudo chmod 777 /opt/loopcron.sh && \
 # Mount license GCS bucket containing dummy license file
 # Name should be license.lic
 LICENSE_LOCATION="/opt/update_license"
-sudo mkdir $LICENSE_LOCATION && \
+sudo mkdir -p $LICENSE_LOCATION
 sudo chmod -R 777 $LICENSE_LOCATION && \
 gcsfuse ${LICENSE_BUCKET_NAME} $LICENSE_LOCATION && \
 echo "License bucket mounted" && \
@@ -91,7 +91,7 @@ else
 fi
 
 # Monitor license file location to start/restart mlm
-/opt/loopcron.sh $LICENSE_LOCATION/license.lic $MATLAB_ROOT $VERSION $LICENSE_MANAGER_PORT $VENDOR_DAEMON_PORT
+sudo /opt/loopcron.sh $LICENSE_LOCATION/license.lic $MATLAB_ROOT $VERSION $LICENSE_MANAGER_PORT $VENDOR_DAEMON_PORT > /var/log/loopcron.log 2>&1 &
 
 # Cleaning up local scripts
 rm -rf getLinuxDistro.sh && \

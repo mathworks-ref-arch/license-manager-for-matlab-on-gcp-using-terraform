@@ -9,7 +9,7 @@ VERSION=$3
 LM_PORT=$4
 DAEMON_PORT=$5
 
-/opt/monitor_license_restart_mlm.sh $LICENSE_FILE $MATLAB_ROOT $VERSION $LM_PORT $DAEMON_PORT &
+sudo /opt/monitor_license_restart_mlm.sh $LICENSE_FILE $MATLAB_ROOT $VERSION $LM_PORT $DAEMON_PORT &
 exit 0
 
 # (c) 2021 MathWorks, Inc.
