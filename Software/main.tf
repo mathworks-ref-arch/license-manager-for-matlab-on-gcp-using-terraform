@@ -54,6 +54,13 @@ module "mlm_vpc_network" {
 data "google_compute_network" "input_vpc_network" {
   count = var.create_new_vpc ? 0 : 1
   name = var.existing_vpc_network
+
+  lifecycle {
+    precondition {
+      condition     = var.existing_vpc_network != ""
+      error_message = "`create_new_vpc` is false, so `existing_vpc_network` must be set to the name of an existing VPC network in project `${var.app_project}`. Either set `existing_vpc_network`, or set `create_new_vpc = true` to have Terraform create the network."
+    }
+  }
 }
 
 # Add firewall rules to allow mlm connections for existing network
@@ -86,6 +93,13 @@ data "google_compute_subnetwork" "input-subnetwork" {
   count = var.subnet_create ? 0 : 1
   name = var.existing_subnet
   region = var.region
+
+  lifecycle {
+    precondition {
+      condition     = var.existing_subnet != ""
+      error_message = "`subnet_create` is false, so `existing_subnet` must be set to the name of an existing subnet in region `${var.region}`. Either set `existing_subnet`, or set `subnet_create = true` to have Terraform create the subnet."
+    }
+  }
 }
 
 # Creating VM for MATLAB Network License Manager

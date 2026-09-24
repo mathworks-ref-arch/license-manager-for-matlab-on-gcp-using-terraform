@@ -6,8 +6,8 @@
         # OS: Ubuntu22
         # Compute: n2-standard-4 machine
         # Number of nodes : 1
-        # Existing GCP VPC & Subnet : True/False
-        # Version : R2021a
+        # Existing GCP VPC & Subnet : False (a new VPC and subnet are created)
+        # Version : R2026b
         # App_Project : XYZ
 
 # App_Project is the name of the Google Cloud project where the resources will be created.
@@ -15,16 +15,17 @@ App_Project="projectid"
 
 ## Recommended practice is to use the latest version of License manager.
 # This supports previous version license checkout as well.
-Version="R2026a"
+Version="R2026b"
 
 # VM Operating system
 BootDiskOS="ubuntu22"
 
 ## Set up a MATLAB Network License Manager on Google Cloud
-Create_VPC=false
-Create_Subnet=false
+Create_VPC=true
+Create_Subnet=true
 
-## The existing networks will be used only if above 2 inputs are set to false
+## The existing networks will be used only if above 2 inputs are set to false.
+## If you set either input to false, you MUST fill in the matching name below.
 Existing_VPC_network=""
 Existing_Subnet=""
 

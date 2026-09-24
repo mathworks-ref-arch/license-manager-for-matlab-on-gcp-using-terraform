@@ -38,8 +38,8 @@ variable "machine_types" {
 # Boot Disk OS details
 variable "bootDiskOS" {
   type = string
-  default = "ubuntu22"
-  description = "Supported OS include: rhel7, rhel8, ubuntu16, ubuntu18, ubuntu20, ubuntu22"
+  default = "ubuntu24"
+  description = "Supported OS include: rhel7, rhel8, ubuntu22, ubuntu24"
 }
 
 variable "imageProject" {
@@ -47,10 +47,8 @@ variable "imageProject" {
   default = {
     rhel7 = "rhel-cloud"
     rhel8 = "rhel-cloud"
-    ubuntu16 = "ubuntu-os-cloud"
-    ubuntu18 = "ubuntu-os-cloud"
-    ubuntu20 = "ubuntu-os-cloud"
     ubuntu22 = "ubuntu-os-cloud"
+    ubuntu24 = "ubuntu-os-cloud"
   }
   description = "Global image project"
 }
@@ -60,10 +58,8 @@ variable "imageFamily" {
   default = {
     rhel7 = "rhel-7"
     rhel8 = "rhel-8"
-    ubuntu16 = "ubuntu-1604-lts"
-    ubuntu18 = "ubuntu-1804-lts"
-    ubuntu20 = "ubuntu-2004-lts"
     ubuntu22 = "ubuntu-2204-lts"
+    ubuntu24 = "ubuntu-2404-lts"
   }
   description = "Global image family"
 }
@@ -71,7 +67,7 @@ variable "imageFamily" {
 # Set this to `true` if new vpc config needs to be created and `false` if en existing one will be used
 variable "create_new_vpc" {
  type = bool
- default = false
+ default = true
 }
 
 # Set this to existing network name if `create_new_vpc` is set to `false`
@@ -90,7 +86,7 @@ variable "network_tags" {
 variable "subnet_create" {
   type = bool
   description = "User Input stating whether new subnet needs to be created or an existing subnet needs to be used"
-  default = false
+  default = true
 }
 
 # Existing Subnet Name as Input
@@ -111,6 +107,11 @@ variable "allowclientip" {
     condition     = length(var.allowclientip) > 0
     error_message = "The allowclientip variable must not be empty. This field should be formatted as <ip_address>/<mask>. E.g. [\"11.22.33.44/32\",\"44.55.66.77/32\"]"
   }
+
+  validation {
+    condition     = alltrue([for cidr in var.allowclientip : can(cidrhost(cidr, 0))])
+    error_message = "Every entry in allowclientip must be a valid CIDR range, including the mask. Replace any placeholder values with the real public IP addresses of your deployment and client machines. E.g. [\"11.22.33.44/32\",\"44.55.66.77/32\"]"
+  }
 }
 
 ## Product specific variables
@@ -118,8 +119,8 @@ variable "allowclientip" {
 # MATLAB and Toolbox Version support
 variable "Version" {
   type = string
-  default = "R2024b"
-  description = "Example: 'R2020a' , 'R2020b', 'R2021a'"
+  default = "R2026b"
+  description = "Example: 'R2025b' , 'R2026a', 'R2026b'"
 }
 
 # Host_ID registered as VM MAC or VM IP

@@ -5,20 +5,20 @@ Once the license manager has been installed on the Google Cloud Instance using t
 Outputs:
 
 compute_zone = "us-central1-a"
-license_bucket = "mlm-21a-ubuntu20-1629991370-license-bucket"
+license_bucket = "mlm-ubuntu24-1629991370-license-bucket"
 mlm_host_id = "10.128.0.2"
-mlm_host_name = "mlm-21a-ubuntu20-1629991370-mlm-node"
+mlm_host_name = "mlm-ubuntu24-1629991370-mlm-node"
 mlm_host_port = 27000
-subnet_name = "mlm-21a-ubuntu20-1629991370-licensemanager-subnetwork"
-version = "R2021a"
-vpc_network_name = "mlm-21a-ubuntu20-1629991370-licensemanager-network"
+subnet_name = "mlm-ubuntu24-1629991370-licensemanager-subnetwork"
+version = "R2026b"
+vpc_network_name = "mlm-ubuntu24-1629991370-licensemanager-network"
 
 
 Extracting output values from Terraform:
 ---------------------------------------
-License Manager is being setup on mlm-21a-ubuntu20-1629991370-mlm-node with IP 10.128.0.2 running at port 27000
-License Manager Version R2021a
-Network Details include network_name = mlm-21a-ubuntu20-1629991370-licensemanager-network subnet = mlm-21a-ubuntu20-1629991370-licensemanager-subnetwork zone = us-central1-c
+License Manager is being setup on mlm-ubuntu24-1629991370-mlm-node with IP 10.128.0.2 running at port 27000
+License Manager Version R2026b
+Network Details include network_name = mlm-ubuntu24-1629991370-licensemanager-network subnet = mlm-ubuntu24-1629991370-licensemanager-subnetwork zone = us-central1-c
 
 
 Querying FlexLM HostID for License Manager host:
@@ -30,13 +30,13 @@ Use HOSTID as 42010a800002 to activate license.
 
 Created file lmhost.txt containing HOSTID for future reference.
 
-Rename the MATLAB license file to be hosted as license.lic. This activated license.lic file can be uploaded to the Google Cloud Storage Bucket: mlm-21a-
+Rename the MATLAB license file to be hosted as license.lic. This activated license.lic file can be uploaded to the Google Cloud Storage Bucket: mlm-
 
-ubuntu20-1629991370-license-bucket .This will automatically trigger MATLAB network license manager service to start provided the license is valid and activated.
+ubuntu24-1629991370-license-bucket .This will automatically trigger MATLAB network license manager service to start provided the license is valid and activated.
 
 
 You can remotely check server status using the following command.
-./local_scripts/test_mlm_status.sh R2021a mlm-21a-ubuntu20-1629991370-mlm-node us-central1-c
+./local_scripts/test_mlm_status.sh R2026b mlm-ubuntu24-1629991370-mlm-node us-central1-c
 
 Deployment complete.
 
@@ -69,7 +69,7 @@ These scripts are located within `Software/local_scripts`.
 
 Querying License Manager status:
 ```
-Version="R2021a"
+Version="R2026b"
 mlmHostName="gcp-${Version}-ubuntu"
 zone="us-central1-c"
 
@@ -78,7 +78,7 @@ zone="us-central1-c"
 
 Get FlexLMHostID of the Google Compute engine instance:
 ```
-Version="R2021a"
+Version="R2026b"
 mlmHostName="gcp-${Version}-ubuntu"
 zone="us-central1-c"
 
@@ -87,11 +87,11 @@ zone="us-central1-c"
 
 Starting the License Manager on Host:
 ```
-Version="R2021a"
+Version="R2026b"
 mlmHostName="gcp-${Version}-ubuntu"
 zone="us-central1-c"
 
 ./Software/local_scripts/start_mlm.sh ${Version[1]} ${mlmHostName[1]} ${zone}
 ```
 
-[//]: #  (Copyright 2021 The MathWorks, Inc.)
+[//]: #  (Copyright 2021-2026 The MathWorks, Inc.)

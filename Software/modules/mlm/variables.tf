@@ -88,8 +88,8 @@ variable "licenseBucketName" {
 # MATLAB LICENSE Version
 variable "Version" {
   type = string
-  default = "R2024b"
-  description = "Example 'R2021a' , 'R2020b', 'R2020a' , 'R2019b' etc"
+  default = "R2026b"
+  description = "Example 'R2026b' , 'R2026a', 'R2025b' , 'R2025a' etc"
 }
 
 ## License Information

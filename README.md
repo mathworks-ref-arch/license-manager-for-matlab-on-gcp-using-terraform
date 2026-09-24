@@ -10,7 +10,8 @@ Before [getting started](#getting-started), a user needs:
   * A valid MathWorks license for product version **R2020a or later**.
   * To be an administrator of the network license that will be used. This might be necessary to activate the license with the `hostid` or `ip` of the VM which will be eventually hosting the License Manager.
   
-For more information on how to configure your license for cloud use, see [MATLAB Licensing in the Cloud](https://www.mathworks.com/help//releases/R2021a/licensingoncloud/matlab-on-the-cloud.html).
+For more information on how to configure your license for cloud use, see [MATLAB Licensing in the Cloud](https://www.mathworks.com/help/install/license/licensing-for-mathworks-products-running-on-the-cloud.html).
+
 
 * Google Cloud Platform:
   * Access to Google Cloud [service account](https://cloud.google.com/iam/docs/service-accounts) credentials
@@ -57,16 +58,16 @@ To get access to valid Google Cloud Service Account credentials, see detailed st
 |region|"us-central1"|`string`|Enter cloud region for resource creation|`yes`|
 |zone|"us-central1-c"|`string`|Enter cloud zone for resource creation|`yes`|
 |machine_types| "n2-standard-4"|`string`|[Google compute machine types](https://cloud.google.com/compute/docs/machine-types#n2_machine_types). See Google cloud [pricing](https://cloud.google.com/compute/vm-instance-pricing) to select a machine_type.|`yes`|
-|bootDiskOS|"ubuntu20"|`string`|"Supported OS include: rhel7, rhel8, ubuntu16, ubuntu18, ubuntu20". `bootDiskOS` is by default mapped to existing public images on GCP with the help of two variables `imageProject` and `imageFamily` mentioned below.|`yes`|
-|imageProject|<ul><li>`rhel7 = "rhel-cloud"`</li></ul> <ul><li>`rhel8 = "rhel-cloud"`</li></ul> <ul><li>`ubuntu16 = "ubuntu-os-cloud"`</li></ul><ul><li>`ubuntu18 = "ubuntu-os-cloud"`</li></ul><ul><li>`ubuntu20 = "ubuntu-os-cloud"`</li></ul>| `map`|Boot disk images available on GCP are referenced using Image Project and Family.This variable maps the input `bootDiskOS` to default public images using the global ProjectID for the image.|`yes`|
-|imageFamily|<ul><li>`rhel7 = "rhel-7"`</li></ul> <ul><li>`rhel8 = "rhel-8"`</li></ul> <ul><li>`ubuntu16 = "ubuntu-1604-lts"`</li></ul> <ul><li>`ubuntu18 = "ubuntu-1804-lts"`</li></ul> <ul><li>`ubuntu20 = "ubuntu-2004-lts"`</li></ul> |`map`| Boot disk images available on GCP are referenced using Image Project and Family.This variable maps the input `bootDiskOS` to default public images using the global image family.|`yes`|
+|bootDiskOS|"ubuntu24"|`string`|"Supported OS include: rhel7, rhel8, ubuntu22, ubuntu24". `bootDiskOS` is by default mapped to existing public images on GCP with the help of two variables `imageProject` and `imageFamily` mentioned below.|`yes`|
+|imageProject|<ul><li>`rhel7 = "rhel-cloud"`</li></ul> <ul><li>`rhel8 = "rhel-cloud"`</li></ul> <ul><li>`ubuntu22 = "ubuntu-os-cloud"`</li></ul><ul><li>`ubuntu24 = "ubuntu-os-cloud"`</li></ul>| `map`|Boot disk images available on GCP are referenced using Image Project and Family.This variable maps the input `bootDiskOS` to default public images using the global ProjectID for the image.|`yes`|
+|imageFamily|<ul><li>`rhel7 = "rhel-7"`</li></ul> <ul><li>`rhel8 = "rhel-8"`</li></ul> <ul><li>`ubuntu22 = "ubuntu-2204-lts"`</li></ul> <ul><li>`ubuntu24 = "ubuntu-2404-lts"`</li></ul> |`map`| Boot disk images available on GCP are referenced using Image Project and Family.This variable maps the input `bootDiskOS` to default public images using the global image family.|`yes`|
 |create_new_vpc|`false`|`bool`|Set this to `true` if new vpc network needs to be created and `false` if an existing one will be used. If this variable is set to `false`, the value for the variable `existing_vpc_network` needs to be set to an existing network name this project has access to. |`yes`|
 |existing_vpc_network|"tf-test-network"|`string`|Set the value to an existing VPC network name if `create_new_vpc` is set to `false`.|`yes`|
 |network_tags|["mlm","ssh"]|`list`|Provide network firewall tags for applying the rules on target License Manager VM created by the scripts. These network_tags are passed as an input to the module `mlm`|`yes`|
 |subnet_create|`false`|`bool`|"User Input stating whether a new subnet needs to be created or an existing subnet needs to be used"|`yes`|
 |existing_subnet|"test-tf-subnet"|`string`|Set to existing subnet name if subnet_create set to `false`. Make sure the existing subnet exists within the existing VPC network stated in `existing_vpc_network`|`yes`|
 |allowclientip|`["11.22.33.44/32","44.55.66.77/32"]`|`set(string)`|Set of IP/CIDR ranges to allow through the firewall (e.g. deployer IP + MATLAB client IP). No default -- must be provided.|`yes`|
-|Version|"R2021a"|`string`|Version of MathWorks product license.|`yes`|
+|Version|"R2026b"|`string`|Version of MathWorks product license.|`yes`|
 |LicenseHostActivation|"HOSTID"|`string`|Is the license activated with VOL Serial (MAC) or with INTERNET (IP).This variable can take values either `HOSTID` or `INTERNET` only.|`yes`|
 |LicenseManagerPort|27000|`number`|Default port for FlexLM service. This port will be open on the firewall to allow traffic requesting for license checkout.|`yes`|
 |VendorDaemonPort|27010|`number`|Vendor daemon port is used for communication between the client application and MLM. The port used by MLM is not set by default. When it is not set, the port is chosen randomly.|`yes`|
@@ -135,4 +136,4 @@ https://www.mathworks.com/products/reference-architectures/request-new-reference
 ### Support
 Email: mwlab@mathworks.com
 
-[//]: #  (Copyright 2021 The MathWorks, Inc.)
+[//]: #  (Copyright 2021-2026 The MathWorks, Inc.)

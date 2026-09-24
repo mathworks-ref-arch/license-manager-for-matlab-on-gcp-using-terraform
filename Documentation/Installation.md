@@ -36,11 +36,11 @@ Provide the latest version you would like to install within [variables.tf](../So
 ```
 variable "Version" {
   type = string
-  default = "R2021a"
-  description = "Example: 'R2020a' , 'R2020b', 'R2021a'"
+  default = "R2026b"
+  description = "Example: 'R2025b' , 'R2026a', 'R2026b'"
 }
 ```
 Keep a template `license.lic` file within `Software\license`. This is a necessary placeholder for a monitoring script on the server. You can leave the file contents blank as well. The monitoring script will expect a license upload/update post deployment to trigger the license manager startup.
 
 
-[//]: #  (Copyright 2021 The MathWorks, Inc.)
+[//]: #  (Copyright 2021-2026 The MathWorks, Inc.)

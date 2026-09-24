@@ -14,7 +14,7 @@ The example has the following pre-requisites:
     * userinfo-email
     * service-management
     * service-control
-* MATLAB Release for License Manager. Supported versions include R2020a, R2020b and R2021a.
+* MATLAB Release for License Manager. All versions are supported.
 
 Once the user has access to all the above `prerequisites` they can proceed to the following steps:
 * Configure default values for  [`Software/variables.tf`](../Software/variables.tf).
@@ -23,11 +23,11 @@ Once the user has access to all the above `prerequisites` they can proceed to th
 
 The sample scenario in this example is as follows:
 
-* OS: `Ubuntu20`
+* OS: `Ubuntu24`
 * Compute: `n2-standard-4`
 * Number of instances required: `1`
 * Use existing VPC & Subnet: `false`
-* MATLAB Version: `R2021a`
+* MATLAB Version: `R2026b`
 
 
 ### Variables overriden within the example:
@@ -35,10 +35,10 @@ The sample scenario in this example is as follows:
 ```
 ## Recommended practice is to use the latest version of License manager.
 # This supports previous version license checkout as well.
-Version="R2021a"
+Version="R2026b"
 
 # VM Operating system
-BootDiskOS="ubuntu20"
+BootDiskOS="ubuntu24"
 
 ## Set up a MATLAB Network License Manager on Google Cloud
 Create_VPC=true
@@ -134,18 +134,18 @@ Here is an example of the Terraform output received at the completion of the dep
 Outputs:
 
 compute_zone = "us-central1-c"
-license_bucket = "mlm-21a-ubuntu20-1629991370-license-bucket"
+license_bucket = "mlm-ubuntu24-1629991370-license-bucket"
 mlm_host_id = "10.128.0.2"
-mlm_host_name = "mlm-21a-ubuntu20-1629991370-mlm-node"
+mlm_host_name = "mlm-ubuntu24-1629991370-mlm-node"
 mlm_host_port = 27000
-subnet_name = "mlm-21a-ubuntu20-1629991370-licensemanager-subnetwork"
-version = "R2021a"
-vpc_network_name = "mlm-21a-ubuntu20-1629991370-licensemanager-network"
+subnet_name = "mlm-ubuntu24-1629991370-licensemanager-subnetwork"
+version = "R2026b"
+vpc_network_name = "mlm-ubuntu24-1629991370-licensemanager-network"
 
 Extracting output values from Terraform
-License Manager is being setup on mlm-21a-ubuntu20-1629991370-mlm-node with IP 10.128.0.2 running at port 27000
-License Manager Version R2021a
-Network Details include network_name = mlm-21a-ubuntu20-1629991370-licensemanager-network subnet = mlm-21a-ubuntu20-1629991370-licensemanager-subnetwork zone = us-central1-c
+License Manager is being setup on mlm-ubuntu24-1629991370-mlm-node with IP 10.128.0.2 running at port 27000
+License Manager Version R2026b
+Network Details include network_name = mlm-ubuntu24-1629991370-licensemanager-network subnet = mlm-ubuntu24-1629991370-licensemanager-subnetwork zone = us-central1-c
 
 Querying FlexLM HostID for License Manager host.
 42010a800002
@@ -153,11 +153,11 @@ Querying FlexLM HostID for License Manager host.
 Visit MathWorks license center to activate license using the HOSTID of the instance.
 Use HOSTID as 42010a800002 to activate license.
 Created file lmhost.txt containing HOSTID for future reference.
-Rename the MATLAB license file to be hosted as license.lic. This activated license.lic file can be uploaded to the Google Cloud Storage Bucket: mlm-21a-ubuntu20-1629991370-license-bucket .This will automatically trigger license manager service to start provided the license is valid and activated.
+Rename the MATLAB license file to be hosted as license.lic. This activated license.lic file can be uploaded to the Google Cloud Storage Bucket: mlm-ubuntu24-1629991370-license-bucket .This will automatically trigger license manager service to start provided the license is valid and activated.
 
 
 You can remotely check server status using the following command.
-./local_scripts/test_mlm_status.sh R2021a mlm-21a-ubuntu20-1629991370-mlm-node us-central1-c
+./local_scripts/test_mlm_status.sh R2026b mlm-ubuntu24-1629991370-mlm-node us-central1-c
 
 Deployment complete.
 
@@ -165,4 +165,4 @@ Deployment complete.
 
 
 
-[//]: #  (Copyright 2021 The MathWorks, Inc.)
+[//]: #  (Copyright 2021-2026 The MathWorks, Inc.)
